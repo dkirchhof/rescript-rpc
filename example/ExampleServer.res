@@ -17,8 +17,8 @@ let server = NodeJS.Server.make((req: NodeJS.Request.t, res: NodeJS.Response.t) 
       ->Promise.then(result => {
         let json = JSON.encode(result)
 
-        res->NodeJS.Response.setHeader("Content-Type", "application/json")
-        res->NodeJS.Response.endWithData(json)
+        NodeJS.Response.setHeader(res, "Content-Type", "application/json")
+        NodeJS.Response.endWithData(res, json)
       })
       ->Promise.catch(error => {
         NodeJS.Response.writeHead(res, 400)
