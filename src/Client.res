@@ -1,20 +1,23 @@
-let make = endpoint => {
-  Proxy.make(
-    Js.Obj.empty(),
-    {
+let make: string => 'a = %raw(`
+  function(encode, decode, endpoint) {
+    return new Proxy({}, {
       get: (_, p) => {
-        (. payload) =>
-          Fetch.make(
-            endpoint,
-            {
-              method: #POST,
-              body: Body.make(p, payload),
-            },
-          )
-          ->Promise.then(response => {
-            response->Fetch.Response.json
-          })
+        return async function(...params) {
+          const body = encode({
+            procedure: p,
+            params,
+          });
+ 
+          const response = await fetch(endpoint, {
+            method: "POST",
+            body,
+          });
+
+          const json = await response.text();
+
+          return decode(json);
+        };
       },
-    },
-  )
-}
+    });
+  }
+`)(JSON.encode, JSON.decode)

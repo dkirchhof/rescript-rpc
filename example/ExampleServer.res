@@ -1,12 +1,30 @@
-let api = (url) => {
-  Api.echo: message => Promise.resolve(`${message} from ${url}`),
-  ping: () => Promise.resolve("pong"),
-}
+module Server = Server.Make({
+  type t = Api.t
 
-let server = NodeJS.Server.make((req, res) => {
+  let api: t = {
+    echo: (. message) => Promise.resolve(message),
+    ping: (. ()) => Promise.resolve("pong"),
+    add: (. a, b) => Promise.resolve(a + b),
+  }
+})
+
+let server = NodeJS.Server.make((req: NodeJS.Request.t, res: NodeJS.Response.t) => {
   if req.url === "/rpc" {
     if req.method === #POST {
-      api(req.url)->Server.handleRequest(req, res)->ignore
+      Server.api
+      ->Server.getBody(req)
+      ->Promise.then(body => Server.api->Server.callProcedureExn(body))
+      ->Promise.then(result => {
+        let json = JSON.encode(result)
+
+        res->NodeJS.Response.setHeader("Content-Type", "application/json")
+        res->NodeJS.Response.endWithData(json)
+      })
+      ->Promise.catch(error => {
+        NodeJS.Response.writeHead(res, 400)
+        NodeJS.Response.endWithData(res, Js.Exn.message(error)->Belt.Option.getUnsafe)
+      })
+      ->ignore
     } else {
       NodeJS.Response.writeHead(res, 405)
       NodeJS.Response.end(res)

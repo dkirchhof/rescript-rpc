@@ -1,23 +1,32 @@
-let handleRequest = (api, req, res) => {
-  req
-  ->Body.parse
-  ->Promise.then(body => {
-    let fn = api->Obj.magic->Js.Dict.get(body.procedure)
+module type Api = {
+  type t
 
-    switch fn {
-    | Some(fn) =>
-      fn(body.payload)->Promise.then(result => {
-        let json = result->Js.Json.stringifyAny->Belt.Option.getExn
+  let api: t
+}
 
-        res->NodeJS.Response.setHeader("Content-Type", "application/json");
-        res->NodeJS.Response.endWithData(json)
-      })
-    | None => {
-        res->NodeJS.Response.writeHead(500)
-        res->NodeJS.Response.endWithData("not implemented yet")
+module Make = (Api: Api) => {
+  let api = Api.api
 
-        Promise.resolve()
-      }
+  let getBody: (Api.t, NodeJS.Request.t) => promise<Body.t<_>> = %raw(`
+    function(decode, api, req) {
+      return new Promise((resolve) => {
+        const chunks = [];
+
+        req.on("data", chunk => chunks.push(chunk));
+
+        req.on("end", () => {
+          const buffer = Buffer.concat(chunks).toString();
+          const body = decode(buffer);
+          
+          resolve(body); 
+        });
+      });
     }
-  })
+  `)(JSON.decode)
+
+  let callProcedureExn: (Api.t, Body.t<_>) => 'b = %raw(`
+    function(api, body) {
+      return api[body.procedure](...body.params);
+    }
+  `)
 }
