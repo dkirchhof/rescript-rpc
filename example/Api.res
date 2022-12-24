@@ -1,5 +1,5 @@
 type t = {
-  echo: (. string) => promise<string>,
-  ping: (. unit) => promise<string>,
-  add: (. int, int) => promise<int>,
+  echo: (. string) => RPCResult.t<string>,
+  ping: (. unit) => RPCResult.t<string>,
+  add: (. int, int) => RPCResult.t<int>,
 }

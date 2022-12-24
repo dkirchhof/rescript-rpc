@@ -1,4 +1,4 @@
-type t<'payload> = {
+type t<'params> = {
   procedure: string,
-  params: 'payload,
+  params: 'params,
 }

@@ -14,14 +14,22 @@
   };
 `)
 
-let encode: 'a => string = %raw(`
+let encode: 'a => option<string> = %raw(`
   function(value) {
-    return JSON.stringify(value);
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return undefined;
+    }
   }
 `)
 
-let decode: string => 'a = %raw(`
+let decode: string => option<'a> = %raw(`
   function(value) {
-    return JSON.parse(value, reviver);
+    try {
+      return JSON.parse(value, reviver);
+    } catch {
+      return undefined;
+    }
   }
 `)

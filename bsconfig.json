@@ -17,5 +17,9 @@
     "module": "es6",
     "in-source": true
   },
-  "suffix": ".mjs"
+  "bs-dependencies": [
+    "AsyncResult"
+  ],
+  "suffix": ".mjs",
+  "bsc-flags": ["-bs-g"]
 }

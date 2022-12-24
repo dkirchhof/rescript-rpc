@@ -2,9 +2,9 @@ module Server = Server.Make({
   type t = Api.t
 
   let api: t = {
-    echo: (. message) => Promise.resolve(message),
-    ping: (. ()) => Promise.resolve("pong"),
-    add: (. a, b) => Promise.resolve(a + b),
+    echo: (. message) => Promise.resolve(message)->Obj.magic,
+    ping: (. ()) => Promise.resolve("pong")->Obj.magic,
+    add: (. a, b) => Promise.resolve(a + b)->Obj.magic,
   }
 })
 
@@ -13,12 +13,12 @@ let server = NodeJS.Server.make((req: NodeJS.Request.t, res: NodeJS.Response.t) 
     if req.method === #POST {
       Server.api
       ->Server.getBody(req)
-      ->Promise.then(body => Server.api->Server.callProcedureExn(body))
-      ->Promise.then(result => {
+      ->Promise.map(body => Server.api->Server.callProcedureExn(body))
+      ->Promise.map(result => {
         let json = JSON.encode(result)
 
         NodeJS.Response.setHeader(res, "Content-Type", "application/json")
-        NodeJS.Response.endWithData(res, json)
+        NodeJS.Response.endWithData(res, json->Belt.Option.getExn)
       })
       ->Promise.catch(error => {
         NodeJS.Response.writeHead(res, 400)
