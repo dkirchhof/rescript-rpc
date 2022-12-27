@@ -1,4 +1,4 @@
-module Server = Server.Make({
+module RPCServer = Server.Make({
   type t = Api.t
 
   let api: t = {
@@ -11,9 +11,9 @@ module Server = Server.Make({
 let server = NodeJS.Server.make((req: NodeJS.Request.t, res: NodeJS.Response.t) => {
   if req.url === "/rpc" {
     if req.method === #POST {
-      Server.api
-      ->Server.getBody(req)
-      ->Promise.map(body => Server.api->Server.callProcedureExn(body))
+      RPCServer.api
+      ->RPCServer.getBody(req)
+      ->Promise.map(body => RPCServer.api->RPCServer.callProcedureExn(body))
       ->Promise.map(result => {
         let json = JSON.encode(result)
 

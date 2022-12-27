@@ -1,16 +1,16 @@
-let client: Api.t = Client.make("http://localhost:3000/rpc")
+module RPC = RescriptRPC.Make({
+  type api = Api.t
+  type error = Api.rpcError
 
-/* client.echo(. "hello") */
-/* ->Promise.then(r => { */
-/* Js.log(r) */
-/* }) */
-/* ->ignore */
+  let onInternalError = error =>
+    switch error {
+    | Error.ClientEncodingError => Api.RPCError("can't encode body")
+    | Error.ClientDecodingError => Api.RPCError("can't decode response")
+    | Error.ClientNetworkingError => Api.RPCError("can't fetch")
+    }
+})
 
-/* client.ping(.) */
-/* ->Promise.then(r => { */
-/* Js.log(r) */
-/* }) */
-/* ->ignore */
+let client = RPC.makeClient("http://localhost:3000/rpc")
 
 client.add(. 2, 4)->AsyncResult.forEach(result =>
   switch result {

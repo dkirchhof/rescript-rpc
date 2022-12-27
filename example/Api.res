@@ -1,5 +1,8 @@
+type rpcError = RPCError(string) | Unauthorized | Forbidden
+type rpcResult<'a> = AsyncResult.t<'a, rpcError>
+
 type t = {
-  echo: (. string) => RPCResult.t<string>,
-  ping: (. unit) => RPCResult.t<string>,
-  add: (. int, int) => RPCResult.t<int>,
+  echo: (. string) => rpcResult<string>,
+  ping: (. unit) => rpcResult<string>,
+  add: (. int, int) => rpcResult<int>,
 }
