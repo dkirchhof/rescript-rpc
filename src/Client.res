@@ -46,7 +46,6 @@ let getText = (response, onError) => {
 
 let decode = (json, onError) => {
   let maybeData = JSON.decode(json)
-  Js.log(maybeData)
 
   switch maybeData {
   | Some(data) => Promise.resolve(data)
