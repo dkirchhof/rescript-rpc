@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+rescript-async-result@dkirchhof/rescript-async-result:
+  version "0.0.1"
+  resolved "https://codeload.github.com/dkirchhof/rescript-async-result/tar.gz/733eb8753ef60c11dccd9234b610c549e55e879d"
+
 rescript@^10.1.0-rc.1:
   version "10.1.0-rc.1"
   resolved "https://registry.yarnpkg.com/rescript/-/rescript-10.1.0-rc.1.tgz#690f10f22084a0328868950fa810e29c4ee990a0"

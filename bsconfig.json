@@ -18,7 +18,7 @@
     "in-source": true
   },
   "bs-dependencies": [
-    "AsyncResult"
+    "rescript-async-result"
   ],
   "suffix": ".mjs"
 }

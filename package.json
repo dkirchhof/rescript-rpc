@@ -3,9 +3,13 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "dev": "rescript build -w"
+    "dev": "rescript build -w",
+    "build-with-deps": "rescript build -with-deps"
   },
   "devDependencies": {
     "rescript": "^10.1.0-rc.1"
+  },
+  "dependencies": {
+    "rescript-async-result": "dkirchhof/rescript-async-result"
   }
 }
