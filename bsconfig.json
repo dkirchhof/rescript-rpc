@@ -1,6 +1,5 @@
 {
   "name": "rescript-rpc",
-  "namespace": "RescriptRPC",
   "version": "0.0.1",
   "sources": [
     {
