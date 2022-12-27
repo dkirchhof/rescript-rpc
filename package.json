@@ -7,7 +7,7 @@
     "build-with-deps": "rescript build -with-deps"
   },
   "devDependencies": {
-    "rescript": "^10.1.0-rc.1"
+    "rescript": "^10.1.0"
   },
   "dependencies": {
     "rescript-async-result": "dkirchhof/rescript-async-result"
