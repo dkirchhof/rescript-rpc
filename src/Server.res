@@ -1,32 +1,51 @@
-module type Api = {
-  type t
+let getBody_: NodeJS.Request.t => promise<string> = %raw(`
+  function(req) {
+    return new Promise((resolve) => {
+      const chunks = [];
 
-  let api: t
+      req.on("data", chunk => chunks.push(chunk));
+
+      req.on("end", () => {
+        const buffer = Buffer.concat(chunks).toString();
+        
+        resolve(buffer); 
+      });
+    });
+  }
+`)
+
+let getBody = (req, onError) => {
+  getBody_(req)->AsyncResult.fromPromise(_ => onError(Error.ServerBodyParserError))
 }
 
-module Make = (Api: Api) => {
-  let api = Api.api
+let callProcedure_: ('a, Body.t<'b>) => 'c = %raw(`
+  function(api, body) {
+    return api[body.procedure](...body.params);
+  }
+`)
 
-  let getBody: (Api.t, NodeJS.Request.t) => promise<Body.t<_>> = %raw(`
-    function(decode, api, req) {
-      return new Promise((resolve) => {
-        const chunks = [];
+let callProcedure = (handlers, body, onError) => {
+  try {
+    callProcedure_(handlers, body)
+  } catch {
+  | _ => onError(Error.ServerMissingProcedureError)->AsyncResult.error
+  }
+}
 
-        req.on("data", chunk => chunks.push(chunk));
+let decode = (json, onError) => {
+  let maybeData = JSON.decode(json)
 
-        req.on("end", () => {
-          const buffer = Buffer.concat(chunks).toString();
-          const body = decode(buffer);
-          
-          resolve(body); 
-        });
-      });
-    }
-  `)(JSON.decode)
+  switch maybeData {
+  | Some(data) => AsyncResult.ok(data)
+  | None => onError(Error.ServerDecodingError)->AsyncResult.error
+  }
+}
 
-  let callProcedureExn: (Api.t, Body.t<_>) => 'b = %raw(`
-    function(api, body) {
-      return api[body.procedure](...body.params);
-    }
-  `)
+let encode = (data, onError) => {
+  let maybeJson = JSON.encode(data)
+
+  switch maybeJson {
+  | Some(json) => AsyncResult.ok(json)
+  | None => onError(Error.ServerEncodingError)->AsyncResult.error
+  }
 }

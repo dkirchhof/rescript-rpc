@@ -24,6 +24,8 @@ let encode: 'a => option<string> = %raw(`
   }
 `)
 
+let encodeUnsafe = data => data->encode->Belt.Option.getUnsafe
+
 let decode: string => option<'a> = %raw(`
   function(value) {
     try {
@@ -33,3 +35,5 @@ let decode: string => option<'a> = %raw(`
     }
   }
 `)
+
+let decodeUnsafe = json => json->decode->Belt.Option.getUnsafe

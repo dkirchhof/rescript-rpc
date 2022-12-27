@@ -1,20 +1,26 @@
-module RPC = RescriptRPC.Make({
-  type api = Api.t
-  type error = Api.rpcError
+let client = Api.RPC.makeClient("http://localhost:3000/rpc")
 
-  let onInternalError = error =>
-    switch error {
-    | Error.ClientEncodingError => Api.RPCError("can't encode body")
-    | Error.ClientDecodingError => Api.RPCError("can't decode response")
-    | Error.ClientNetworkingError => Api.RPCError("can't fetch")
-    }
-})
+client.echo(. "hello")->AsyncResult.forEach(result =>
+  switch result {
+  | Ok(r) => Js.log("result: " ++ r)
+  | Error(e) => Js.log(e)
+  }
+)
 
-let client = RPC.makeClient("http://localhost:3000/rpc")
-
-client.add(. 2, 4)->AsyncResult.forEach(result =>
+client.divide(. 10, 2)->AsyncResult.forEach(result =>
   switch result {
   | Ok(r) => Js.log("result: " ++ Belt.Int.toString(r))
   | Error(e) => Js.log(e)
+  }
+)
+
+client.divide(. 10, 0)->AsyncResult.forEach(result =>
+  switch result {
+  | Ok(r) => Js.log("result: " ++ Belt.Int.toString(r))
+  | Error(e) =>
+    switch e {
+    | Api.RPCError(message) => Js.log("error: " ++ message)
+    | Api.BadParams => Js.log("error: bad params")
+    }
   }
 )

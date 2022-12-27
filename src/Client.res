@@ -10,8 +10,8 @@ let makeProxy: ((string, 'params) => 'c) => 'd = %raw(`
   }
 `)
 
-let encode = (payload, onError) => {
-  let maybeJson = JSON.encode(payload)
+let encode = (data, onError) => {
+  let maybeJson = JSON.encode(data)
 
   switch maybeJson {
   | Some(json) => AsyncResult.ok(json)
@@ -24,6 +24,9 @@ let fetch = (endpoint, body, onError) => {
     endpoint,
     {
       method: #POST,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body,
     },
   )
@@ -42,10 +45,11 @@ let getText = (response, onError) => {
 }
 
 let decode = (json, onError) => {
-  let maybeObj = JSON.decode(json)
+  let maybeData = JSON.decode(json)
+  Js.log(maybeData)
 
-  switch maybeObj {
-  | Some(obj) => AsyncResult.ok(obj)
+  switch maybeData {
+  | Some(data) => Promise.resolve(data)
   | None => onError(Error.ClientDecodingError)->AsyncResult.error
   }
 }
