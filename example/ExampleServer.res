@@ -1,4 +1,4 @@
-let server = NodeJS.Server.make((req: NodeJS.Request.t, res: NodeJS.Response.t) => {
+let server = RescriptRPC_NodeJS.Server.make((req: RescriptRPC_NodeJS.Request.t, res: RescriptRPC_NodeJS.Response.t) => {
   if req.url === "/rpc" {
     if req.method === #POST {
       // set cors
@@ -20,15 +20,15 @@ let server = NodeJS.Server.make((req: NodeJS.Request.t, res: NodeJS.Response.t) 
         res,
       )
     } else {
-      NodeJS.Response.writeHead(res, 405)
-      NodeJS.Response.end(res)
+      RescriptRPC_NodeJS.Response.writeHead(res, 405)
+      RescriptRPC_NodeJS.Response.end(res)
     }
   } else {
-    NodeJS.Response.writeHead(res, 404)
-    NodeJS.Response.end(res)
+    RescriptRPC_NodeJS.Response.writeHead(res, 404)
+    RescriptRPC_NodeJS.Response.end(res)
   }
 })
 
-NodeJS.Server.listen(server, 3000, "localhost", () => {
+RescriptRPC_NodeJS.Server.listen(server, 3000, "localhost", () => {
   Js.log("server is running")
 })

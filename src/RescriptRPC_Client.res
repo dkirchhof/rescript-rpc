@@ -11,16 +11,16 @@ let makeProxy: ((string, 'params) => 'c) => 'd = %raw(`
 `)
 
 let encode = (data, onError) => {
-  let maybeJson = JSON.encode(data)
+  let maybeJson = RescriptRPC_JSON.encode(data)
 
   switch maybeJson {
   | Some(json) => AsyncResult.ok(json)
-  | None => onError(Error.ClientEncodingError)->AsyncResult.error
+  | None => onError(RescriptRPC_Error.ClientEncodingError)->AsyncResult.error
   }
 }
 
 let fetch = (endpoint, body, onError) => {
-  Fetch.fetch(
+  RescriptRPC_Fetch.fetch(
     endpoint,
     {
       method: #POST,
@@ -30,25 +30,27 @@ let fetch = (endpoint, body, onError) => {
       body,
     },
   )
-  ->Promise.map(response =>
+  ->RescriptRPC_Promise.map(response =>
     if response.ok {
       Ok(response)
     } else {
-      onError(Error.ClientNetworkingError)->Error
+      onError(RescriptRPC_Error.ClientNetworkingError)->Error
     }
   )
-  ->Promise.catch(_ => onError(Error.ClientNetworkingError)->Error)
+  ->RescriptRPC_Promise.catch(_ => onError(RescriptRPC_Error.ClientNetworkingError)->Error)
 }
 
 let getText = (response, onError) => {
-  Fetch.Response.text(response)->AsyncResult.fromPromise(_ => onError(Error.ClientNetworkingError))
+  RescriptRPC_Fetch.Response.text(response)->AsyncResult.fromPromise(_ =>
+    onError(RescriptRPC_Error.ClientNetworkingError)
+  )
 }
 
 let decode = (json, onError) => {
-  let maybeData = JSON.decode(json)
+  let maybeData = RescriptRPC_JSON.decode(json)
 
   switch maybeData {
-  | Some(data) => Promise.resolve(data)
-  | None => onError(Error.ClientDecodingError)->AsyncResult.error
+  | Some(data) => RescriptRPC_Promise.resolve(data)
+  | None => onError(RescriptRPC_Error.ClientDecodingError)->AsyncResult.error
   }
 }

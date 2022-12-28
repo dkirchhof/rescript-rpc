@@ -1,4 +1,4 @@
-let getBody_: NodeJS.Request.t => promise<string> = %raw(`
+let getBody_: RescriptRPC_NodeJS.Request.t => promise<string> = %raw(`
   function(req) {
     return new Promise((resolve) => {
       const chunks = [];
@@ -15,10 +15,10 @@ let getBody_: NodeJS.Request.t => promise<string> = %raw(`
 `)
 
 let getBody = (req, onError) => {
-  getBody_(req)->AsyncResult.fromPromise(_ => onError(Error.ServerBodyParserError))
+  getBody_(req)->AsyncResult.fromPromise(_ => onError(RescriptRPC_Error.ServerBodyParserError))
 }
 
-let callProcedure_: ('a, Body.t<'b>) => 'c = %raw(`
+let callProcedure_: ('a, RescriptRPC_Body.t<'b>) => 'c = %raw(`
   function(api, body) {
     return api[body.procedure](...body.params);
   }
@@ -28,24 +28,24 @@ let callProcedure = (handlers, body, onError) => {
   try {
     callProcedure_(handlers, body)
   } catch {
-  | _ => onError(Error.ServerMissingProcedureError)->AsyncResult.error
+  | _ => onError(RescriptRPC_Error.ServerMissingProcedureError)->AsyncResult.error
   }
 }
 
 let decode = (json, onError) => {
-  let maybeData = JSON.decode(json)
+  let maybeData = RescriptRPC_JSON.decode(json)
 
   switch maybeData {
   | Some(data) => AsyncResult.ok(data)
-  | None => onError(Error.ServerDecodingError)->AsyncResult.error
+  | None => onError(RescriptRPC_Error.ServerDecodingError)->AsyncResult.error
   }
 }
 
 let encode = (data, onError) => {
-  let maybeJson = JSON.encode(data)
+  let maybeJson = RescriptRPC_JSON.encode(data)
 
   switch maybeJson {
   | Some(json) => AsyncResult.ok(json)
-  | None => onError(Error.ServerEncodingError)->AsyncResult.error
+  | None => onError(RescriptRPC_Error.ServerEncodingError)->AsyncResult.error
   }
 }

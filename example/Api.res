@@ -14,12 +14,12 @@ module RPC = RescriptRPC.Make({
 
   let onInternalError = error =>
     switch error {
-    | Error.ClientEncodingError => RPCError("client encoding error")
-    | Error.ClientDecodingError => RPCError("client decoding error")
-    | Error.ClientNetworkingError => RPCError("client networking error")
-    | Error.ServerEncodingError => RPCError("server encoding error")
-    | Error.ServerDecodingError => RPCError("server decoding error")
-    | Error.ServerMissingProcedureError => RPCError("server missing procedure error")
-    | Error.ServerBodyParserError => RPCError("server body parser error")
+    | RescriptRPC_Error.ClientEncodingError => RPCError("client encoding error")
+    | RescriptRPC_Error.ClientDecodingError => RPCError("client decoding error")
+    | RescriptRPC_Error.ClientNetworkingError => RPCError("client networking error")
+    | RescriptRPC_Error.ServerEncodingError => RPCError("server encoding error")
+    | RescriptRPC_Error.ServerDecodingError => RPCError("server decoding error")
+    | RescriptRPC_Error.ServerMissingProcedureError => RPCError("server missing procedure error")
+    | RescriptRPC_Error.ServerBodyParserError => RPCError("server body parser error")
     }
 })
