@@ -7,6 +7,13 @@ client.echo(. "hello")->AsyncResult.forEach(result =>
   }
 )
 
+client.ping(.)->AsyncResult.forEach(result =>
+  switch result {
+  | Ok(r) => Js.log("result: " ++ r)
+  | Error(e) => Js.log(e)
+  }
+)
+
 client.divide(. 10, 2)->AsyncResult.forEach(result =>
   switch result {
   | Ok(r) => Js.log("result: " ++ Belt.Int.toString(r))

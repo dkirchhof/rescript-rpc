@@ -1,7 +1,7 @@
 include Node
 
 module Request = {
-  type t = {url: string, method: [#POST]}
+  type t = {url: string, method: [#POST | #OPTIONS]}
 
   @send
   external on: (
