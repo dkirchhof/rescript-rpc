@@ -3,8 +3,8 @@
 
 
 rescript-async-result@dkirchhof/rescript-async-result:
-  version "0.0.1"
-  resolved "https://codeload.github.com/dkirchhof/rescript-async-result/tar.gz/733eb8753ef60c11dccd9234b610c549e55e879d"
+  version "0.0.2"
+  resolved "https://codeload.github.com/dkirchhof/rescript-async-result/tar.gz/a81cb2fe3d9261a9212320abe1df3c2758430ab7"
 
 rescript@^10.1.0:
   version "10.1.0"
