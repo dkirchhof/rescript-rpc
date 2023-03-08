@@ -14,17 +14,17 @@ module Make = (RPC: RPC) => {
       }
 
       RescriptRPC_Client.encode(body, RPC.onInternalError)
-      ->AsyncResult.flatMapOk(RescriptRPC_Client.fetch(endpoint, _, RPC.onInternalError))
-      ->AsyncResult.flatMapOk(RescriptRPC_Client.getText(_, RPC.onInternalError))
-      ->AsyncResult.flatMapOk(RescriptRPC_Client.decode(_, RPC.onInternalError))
+      ->AsyncResult.flatMap(RescriptRPC_Client.fetch(endpoint, _, RPC.onInternalError))
+      ->AsyncResult.flatMap(RescriptRPC_Client.getText(_, RPC.onInternalError))
+      ->AsyncResult.flatMap(RescriptRPC_Client.decode(_, RPC.onInternalError))
     })
 
   let handleRequest = (api: RPC.api, req, res) => {
     RescriptRPC_NodeJS.Response.setHeader(res, "Content-Type", "application/json")
 
     RescriptRPC_Server.getBody(req, RPC.onInternalError)
-    ->AsyncResult.flatMapOk(RescriptRPC_Server.decode(_, RPC.onInternalError))
-    ->AsyncResult.flatMapOk(RescriptRPC_Server.callProcedure(api, _, RPC.onInternalError))
+    ->AsyncResult.flatMap(RescriptRPC_Server.decode(_, RPC.onInternalError))
+    ->AsyncResult.flatMap(RescriptRPC_Server.callProcedure(api, _, RPC.onInternalError))
     ->AsyncResult.forEach(result => {
       let maybeJson = result->RescriptRPC_JSON.encode
 

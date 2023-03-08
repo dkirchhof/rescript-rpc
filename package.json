@@ -1,13 +1,13 @@
 {
   "name": "rescript-rpc",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "scripts": {
     "dev": "rescript build -w",
     "build-with-deps": "rescript build -with-deps"
   },
   "devDependencies": {
-    "rescript": "^10.1.0"
+    "rescript": "^10.1.3"
   },
   "dependencies": {
     "rescript-async-result": "dkirchhof/rescript-async-result"
