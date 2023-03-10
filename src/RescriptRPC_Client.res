@@ -50,7 +50,7 @@ let decode = (json, onError) => {
   let maybeData = RescriptRPC_JSON.decode(json)
 
   switch maybeData {
-  | Some(data) => RescriptRPC_Promise.resolve(data)
+  | Some(data) => AsyncResult.ok(data)
   | None => onError(RescriptRPC_Error.ClientDecodingError)->AsyncResult.error
   }
 }
