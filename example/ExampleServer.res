@@ -15,6 +15,7 @@ let server = RescriptRPC_NodeJS.Server.make((req: RescriptRPC_NodeJS.Request.t, 
               AsyncResult.ok(a / b)
             }
           },
+          nothing: (. ()) => AsyncResult.ok(),
         },
         req,
         res,

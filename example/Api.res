@@ -6,6 +6,7 @@ type api = {
   ping: (. unit) => rpcResult<string>,
   add: (. int, int) => rpcResult<int>,
   divide: (. int, int) => rpcResult<int>,
+  nothing: (. unit) => rpcResult<unit>,
 }
 
 module RPC = RescriptRPC.Make({

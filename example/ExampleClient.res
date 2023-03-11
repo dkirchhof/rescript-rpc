@@ -24,3 +24,8 @@ client.divide(. 10, 0)->AsyncResult.forEachBoth(
   },
   result => Js.log("result: " ++ Belt.Int.toString(result)),
 )
+
+client.nothing(.)->AsyncResult.forEachBoth(
+  error => Js.log(error),
+  _result => Js.log("result: nothing"),
+)
