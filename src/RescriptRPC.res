@@ -16,13 +16,8 @@ module Make = (RPC: RPC) => {
       RescriptRPC_Client.encode(body, RPC.onInternalError)
       ->AsyncResult.flatMap(RescriptRPC_Client.fetch(endpoint, _, RPC.onInternalError))
       ->AsyncResult.flatMap(RescriptRPC_Client.getText(_, RPC.onInternalError))
-      ->AsyncResult.flatMap(text => {
-        if text === "" {
-          AsyncResult.ok()
-        } else {
-          RescriptRPC_Client.decode(text, RPC.onInternalError)
-        }
-      })
+      ->AsyncResult.flatMap(RescriptRPC_Client.decode(_, RPC.onInternalError))
+      ->AsyncResult.flatMap(result => result)
     })
 
   let handleRequest = (api: RPC.api, req, res) => {

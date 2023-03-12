@@ -6,7 +6,7 @@ rescript-async-result@dkirchhof/rescript-async-result:
   version "0.1.0"
   resolved "https://codeload.github.com/dkirchhof/rescript-async-result/tar.gz/12773cfb530f0c222cf4ad8dea99189182a2fb8a"
 
-rescript@^10.1.0:
+rescript@^10.1.3:
   version "10.1.3"
   resolved "https://registry.yarnpkg.com/rescript/-/rescript-10.1.3.tgz#0ff208cef09ea1f8ad38efc171c4942eca72d444"
   integrity sha512-5qaf63As6nkbrMRJ85kZ0ifLzKAGPOGLuoJ4zFVGZIp4oMePRt6bCKWAIX7zgbRDfRPa3jSu+EnoY2873gxaIA==
