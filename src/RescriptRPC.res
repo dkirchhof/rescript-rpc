@@ -32,8 +32,8 @@ module Make = (RPC: RPC) => {
     ->AsyncResult.flatMap(RescriptRPC_Server.decode(_, RPC.onInternalError))
     ->AsyncResult.flatMap(RescriptRPC_Server.callProcedure(api, _, RPC.onInternalError))
     ->AsyncResult.forEachBoth(
-      RescriptRPC_Server.sendResponse(_, res, RPC.onInternalError),
-      RescriptRPC_Server.sendResponse(_, res, RPC.onInternalError),
+      error => error->Error->RescriptRPC_Server.sendResponse(res, RPC.onInternalError),
+      result => result->Ok->RescriptRPC_Server.sendResponse(res, RPC.onInternalError),
     )
   }
 }
