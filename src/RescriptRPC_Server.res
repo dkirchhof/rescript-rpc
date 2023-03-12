@@ -49,3 +49,12 @@ let encode = (data, onError) => {
   | None => onError(RescriptRPC_Error.ServerEncodingError)->AsyncResult.error
   }
 }
+
+let sendResponse = (result, res, onError) => {
+  let maybeJson = result->RescriptRPC_JSON.encode
+
+  switch maybeJson {
+  | Some(json) => RescriptRPC_NodeJS.Response.endWithData(res, json)
+  | None => RescriptRPC_NodeJS.Response.endWithData(res, RescriptRPC_JSON.encodeUnsafe(onError))
+  }
+}

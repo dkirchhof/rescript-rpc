@@ -31,17 +31,9 @@ module Make = (RPC: RPC) => {
     RescriptRPC_Server.getBody(req, RPC.onInternalError)
     ->AsyncResult.flatMap(RescriptRPC_Server.decode(_, RPC.onInternalError))
     ->AsyncResult.flatMap(RescriptRPC_Server.callProcedure(api, _, RPC.onInternalError))
-    ->AsyncResult.forEach(result => {
-      let maybeJson = result->RescriptRPC_JSON.encode
-
-      switch maybeJson {
-      | Some(json) => RescriptRPC_NodeJS.Response.endWithData(res, json)
-      | None =>
-        RescriptRPC_NodeJS.Response.endWithData(
-          res,
-          RescriptRPC_JSON.encodeUnsafe(RPC.onInternalError),
-        )
-      }
-    })
+    ->AsyncResult.forEachBoth(
+      RescriptRPC_Server.sendResponse(_, res, RPC.onInternalError),
+      RescriptRPC_Server.sendResponse(_, res, RPC.onInternalError),
+    )
   }
 }
