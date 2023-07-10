@@ -1,5 +1,3 @@
-include Node
-
 module Request = {
   type t = {url: string, method: [#POST | #OPTIONS]}
 
